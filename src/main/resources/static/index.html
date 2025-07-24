@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stripe Spring Boot Payment</title>
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        body { font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; background-color: #f4f4f4; margin: 0; padding: 20px;}
+        .container { background-color: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 600px; margin-bottom: 20px; text-align: center; }
+        h1, h2 { color: #333; margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; text-align: left; font-weight: bold; }
+        input[type="number"], input[type="text"], input[type="email"] { width: calc(100% - 20px); padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; }
+        #card-element, #save-card-element { border: 1px solid #ddd; padding: 10px; border-radius: 4px; background-color: #f9f9f9; margin-bottom: 20px; }
+        button { background-color: #6772E5; color: white; padding: 12px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; width: 100%; transition: background-color 0.3s ease; margin-bottom: 10px;}
+        button:hover { background-color: #5469d4; }
+        #payment-status, #customer-status, #save-card-status, #charge-status { margin-top: 20px; font-weight: bold; }
+        .error-message { color: red; margin-top: 10px; }
+        .success-message { color: green; margin-top: 10px; }
+        .card-list { list-style: none; padding: 0; text-align: left; }
+        .card-list li { background-color: #f0f0f0; padding: 10px; margin-bottom: 5px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; }
+        .card-list li button { width: auto; padding: 5px 10px; margin-left: 10px; font-size: 14px; background-color: #dc3545; }
+        .card-list li button:hover { background-color: #c82333; }
+        .small-button { width: auto; padding: 5px 10px; margin-left: 10px; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Stripe Payment Integration</h1>
+        <p>This demo covers one-time payments and saved customer/card payments.</p>
+    </div>
+
+    <div class="container">
+        <h2>1. Create Stripe Customer</h2>
+        <div class="form-group">
+            <label for="customer-email">Customer Email:</label>
+            <input type="email" id="customer-email" value="test@example.com" placeholder="email@example.com">
+        </div>
+        <div class="form-group">
+            <label for="customer-name">Customer Name:</label>
+            <input type="text" id="customer-name" value="Test User" placeholder="John Doe">
+        </div>
+        <button id="create-customer-button">Create Customer</button>
+        <div id="customer-status"></div>
+        <p>Current Customer ID: <span id="current-customer-id">None</span></p>
+    </div>
+
+    <div class="container">
+        <h2>2. Save Card to Customer</h2>
+        <p>Make sure you have a "Current Customer ID" above before saving a card.</p>
+        <label for="save-card-element">Credit or debit card to save:</label>
+        <div id="save-card-element">
+            </div>
+        <div id="save-card-errors" role="alert" class="error-message"></div>
+        <button id="save-card-button">Save Card</button>
+        <div id="save-card-status"></div>
+    </div>
+
+    <div class="container">
+        <h2>3. Saved Cards for Current Customer</h2>
+        <button id="list-cards-button" class="small-button">Refresh Saved Cards</button>
+        <ul id="saved-cards-list" class="card-list">
+            <li>No saved cards. Create a customer and save a card.</li>
+        </ul>
+
+        <h3>Charge with Saved Card</h3>
+        <p>Select a card from the list above or leave blank to use customer's default.</p>
+        <div class="form-group">
+            <label for="charge-amount">Amount (USD cents):</label>
+            <input type="number" id="charge-amount" value="500" placeholder="e.g., 500 for $5.00">
+        </div>
+        <div class="form-group">
+            <label for="charge-description">Description (Optional):</label>
+            <input type="text" id="charge-description" placeholder="e.g., Recurring charge for service">
+        </div>
+        <button id="charge-customer-button">Charge Customer</button>
+        <div id="charge-status"></div>
+    </div>
+
+    <div class="container">
+        <h2>4. One-Time Payment (No Saved Card)</h2>
+        <div class="form-group">
+            <label for="amount">Amount (USD cents):</label>
+            <input type="number" id="amount" value="1000" placeholder="e.g., 1000 for $10.00">
+        </div>
+        <div class="form-group">
+            <label for="description">Description (Optional):</label>
+            <input type="text" id="description" placeholder="e.g., Payment for order #123">
+        </div>
+        <label for="card-element">Credit or debit card:</label>
+        <div id="card-element">
+            </div>
+        <div id="card-errors" role="alert" class="error-message"></div>
+        <button id="submit-button">Pay Now</button>
+        <div id="payment-status"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
