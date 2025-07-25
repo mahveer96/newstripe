@@ -4,12 +4,16 @@ package com.example.stripeintegration.controller;
 
 import com.example.stripeintegration.dto.*; // Import all DTOs
 import com.example.stripeintegration.service.StripeService;
+import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
 import com.stripe.model.PaymentIntent;
 import com.stripe.model.PaymentMethod;
 import com.stripe.model.SetupIntent;
 import com.stripe.model.StripeObject;
+
+import io.github.cdimascio.dotenv.Dotenv;
+import jakarta.annotation.PostConstruct;
 
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,8 +33,26 @@ public class PaymentController {
 
     private final StripeService stripeService;
 
-    @Value("${stripe.api.publishableKey}")
+    //@Value("${stripe.api.publishableKey}")
+
+
     private String stripePublishableKey;
+
+    @PostConstruct
+    public void init() {
+        Dotenv dotenv = Dotenv.load();
+        stripePublishableKey = dotenv.get("stripe.api.publishableKey");
+         //Stripe.publishableKey
+       // System.out.println("Loaded Stripe Key: " + stripePublishableKey);
+    }
+
+    // getter
+    public String getStripePublishableKey() {
+        return stripePublishableKey;
+    }
+
+
+   // private String stripePublishableKey;
 
     public PaymentController(StripeService stripeService) {
         this.stripeService = stripeService;
