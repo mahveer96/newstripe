@@ -10,8 +10,22 @@ import jakarta.annotation.PostConstruct;
 
 @Configuration
 public class StripeConfig {
-
+@Value("${stripe.secret-key}")
     private String secretKey;
+
+    @PostConstruct
+    public void init() {
+        Stripe.apiKey = secretKey;
+      //  System.out.println("Stripe Secret Key loaded successfully.");
+    }
+
+    public String getSecretKey() {
+        return secretKey;
+    }
+
+
+
+/*private String secretKey;
 @PostConstruct
 public void init() {
     Dotenv dotenv = Dotenv.load();
@@ -23,7 +37,7 @@ public void init() {
 // getter
 public String getSecretKey() {
     return secretKey;
-}
+}*/
 
 
 

@@ -36,9 +36,22 @@ public class PaymentController {
     //@Value("${stripe.api.publishableKey}")
 
 
+    //private String stripePublishableKey;
+
+    @Value("${stripe.api.publishableKey}")
     private String stripePublishableKey;
 
     @PostConstruct
+    public void init() {
+        Stripe.apiKey = stripePublishableKey;
+        System.out.println("Stripe Secret Key loaded successfully.");
+    }
+
+    public String getStripePublishableKey() {
+        return stripePublishableKey;
+    }
+
+   /*  @PostConstruct
     public void init() {
         Dotenv dotenv = Dotenv.load();
         stripePublishableKey = dotenv.get("stripe.api.publishableKey");
@@ -50,7 +63,7 @@ public class PaymentController {
     public String getStripePublishableKey() {
         return stripePublishableKey;
     }
-
+*/
 
    // private String stripePublishableKey;
 
